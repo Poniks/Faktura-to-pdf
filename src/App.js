@@ -1,31 +1,14 @@
-import './App.css';
+import './main.scss';
+import React from 'react';
+import { Container } from '@material-ui/core';
+import Post from './Post';
 
 function App() {
   return (
     <div className="App">
-      <form>
-        <div>
-          <div>
-            <div className="row">
-              Sprzedawca
-              <input type="text"/>
-            </div>
-            <div className="row">
-              NIP
-              <input type="text"/>
-            </div>
-            <div className="row">
-              Ulica
-              <input type="text"/>
-            </div>
-            <div className="row">
-              Miasto / kod
-              <input type="text"/>
-            </div>
-          </div>
-          <div></div>
-        </div>
-      </form>
+      <Container>
+        <Post />
+      </Container>
     </div>
   );
 }
