@@ -3,11 +3,30 @@ import { TextField, MenuItem } from '@material-ui/core';
 import PDF from './PDF'
 
 const Post = () => {
+    let newDate = new Date()
+    let day = newDate.getDate();
+    let month = newDate.getMonth() + 1;
+    let year = newDate.getFullYear();
+
+    let newDay;
+    if(day<10) {
+        newDay = `0${day}`;
+    } else newDay = day;
+
+    let newMonth;
+    if(month<10) {
+        newMonth = `0${month}`;
+    } else newMonth = month;
+
     const [state, setState] = useState({
         title: '',
         content: '',
         postSubmitted: false,
         document: 'Faktura',
+        numer: '01/02/2021',
+        city: '',
+        dateSell: `${year}-${newMonth}-${newDay}`,
+        dateIssue: `${year}-${newMonth}-${newDay}`,
     });
 
     const handleChange = input => e => {
@@ -36,8 +55,7 @@ const Post = () => {
         {
           value: 'Faktura VAT',
         },
-      ];
-
+    ];
 
     return(
         <>  
@@ -49,7 +67,7 @@ const Post = () => {
                             select
                             label="Dokument"
                             value={state.document}
-                            onChange={handleChange}
+                            onChange={handleChange('document')}
                             variant="outlined"
                             size="medium"
                         >
@@ -59,6 +77,41 @@ const Post = () => {
                                 </MenuItem>
                             ))}
                         </TextField>
+                        <TextField
+                            id="outlined-multiline-flexible"
+                            label="Numer"
+                            rowsMax={4}
+                            value={state.numer}
+                            onChange={handleChange('numer')}
+                            variant="outlined"
+                        />
+                        <TextField
+                            id="outlined-multiline-flexible"
+                            label="Miejsce wystawienia"
+                            rowsMax={4}
+                            value={state.city}
+                            onChange={handleChange('city')}
+                            variant="outlined"
+                        />
+                        <TextField
+                            id="outlined-multiline-flexible"
+                            label="Data wystawienia"
+                            rowsMax={4}
+                            type='date'
+                            value={state.dateIssue}
+                            onChange={handleChange('dateIssue')}
+                            variant="outlined"
+                        />
+                        <TextField
+                            id="outlined-multiline-flexible"
+                            label="Data sprzedaży"
+                            format="dd/mm/yyyy"
+                            rowsMax={4}
+                            type='date'
+                            value={state.dateSell}
+                            onChange={handleChange('dateSell')}
+                            variant="outlined"
+                        />
                     </div>
                 </div>)
                 :
