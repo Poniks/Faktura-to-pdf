@@ -4,6 +4,7 @@
 
 body {
   margin: 0;
+  font-family: 'Roboto', sans-serif;
 }
 
 .App {
@@ -11,11 +12,47 @@ body {
   .box-inputs {
     padding: 20px 0;
 
-    .nwm{
+    .nwm1{
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      // background-color: lightblue;
 
       .MuiTextField-root {
-        width: 25ch;
+        flex-basis: 16em;
         margin: 8px;
+      }
+    }
+
+    .nwm2 {
+
+      .items {
+        width: 50%;
+        display: inline-block;
+        // background-color: blue;
+        .item {
+          display: flex;
+          justify-content: flex-end;
+
+          p {
+            font-size: 18px;
+            font-weight: normal;
+            line-height: 36px;
+          }
+
+          .test2 {
+            width: 12em;
+          }
+
+          .test1 {
+            width: 5.5em;
+          }
+        }
+
+        .MuiTextField-root {
+          width: 18.5em;
+          margin: 8px;
+        }
       }
     }
   }
