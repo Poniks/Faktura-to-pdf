@@ -55,6 +55,50 @@ body {
         }
       }
     }
+
+    .nwm3 {
+
+      .deleteCell {
+        padding: 10px;
+        width: 20px;
+
+        .deleteIcon {
+          padding: 0;
+          color: #666;
+
+          .MuiSvgIcon-root {
+            margin: 0 5px;
+          }
+        }
+      }
+
+      .productCell {
+        padding-left: 0px;
+
+        .product {
+          width: 100%;
+        }
+      }
+
+      .MuiTableCell-root {
+        text-align: center;
+      }
+
+      .piece {
+        width: 4em;
+      }
+
+      .price {
+        width: 5.3em;
+      }
+
+      .MuiButton-root {
+        min-width: 20px;
+        padding: 5px;
+        text-align: center;
+        color: white;
+      }
+    }
   }
 
   .Post {
