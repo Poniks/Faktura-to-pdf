@@ -56,17 +56,44 @@ const Post = () => {
         });
     };
 
+   
     const handleAddNewLine = (e) => {
-        let test = state.inputListRecountVat.map((line, i) => (
+        let arrBooleans = state.inputListRecountVat.map((line, i) => (
             line[1].includes(e.target.value)
         ))
 
-        if(!test.includes(true)){
+        if(!arrBooleans.includes(true)){
             setState({
                 ...state,
                 inputListRecountVat: [...state.inputListRecountVat, ['',e.target.value,'','']],        
             });
         }
+    }
+
+    const handleRemoveLine = () => {
+        let arrFinishVat = state.inputListRecountVat.map((line, i) => (
+            line[1]
+        ))
+        let arrVat = state.inputList.map((line, i) => (
+            line[5]
+        ))
+
+        arrFinishVat.forEach((item, index) => {
+            console.log(arrVat.includes(item), item, index)
+            const list = [...state.inputListRecountVat];
+            if(!arrVat.includes(item)) {
+                
+                list.splice(index, 1);
+                
+                console.log(list)
+                
+            }
+            setState({ ...state, inputListRecountVat: list });
+
+        })
+
+        console.log(`arrFinish  ${arrFinishVat}`)
+        console.log(`arrVat  ${arrVat}`)
     }
 
     const handleChange = input => e => {
@@ -421,7 +448,9 @@ const Post = () => {
                                                         list[i][7] = (brutto).toFixed(2);
                                                         setState({ ...state, inputList: list });
                                                         recountSum();
+                                                        handleRemoveLine();
                                                         handleAddNewLine(e);
+                                                        
                                                     }}
                                                     className="vat-rate"
                                                 >
