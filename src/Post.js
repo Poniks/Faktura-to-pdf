@@ -42,29 +42,66 @@ const Post = () => {
         setState({ ...state, inputList: list });
     };
 
-    const handleRemoveClick = (index) => {
+    const handleRemoveClick = (index, vat) => {
+        const listVat = [...state.inputListRecountVat];
         const list = [...state.inputList];
         list.splice(index, 1);
 
-        let arrFinishVat = state.inputListRecountVat.map((line, i) => (
+        let arrFinishVat = listVat.map((line, i) => (
             line[1]
         ))
-        let arrVat = list.map((line, i) => (
+        let arrInputVat = list.map((line, i) => (
             line[5]
         ))
-        
-        const listVat = [...state.inputListRecountVat];
 
-        for(let i = state.inputListRecountVat.length-1; i >= 0; i--){
-            if(!arrVat.includes(arrFinishVat[i])) {   
+        for(let i = listVat.length-1; i >= 0; i--){
+            if(!arrInputVat.includes(arrFinishVat[i])) {   
                 listVat.splice(i, 1);           
              }
         }
 
+        let arrNet = [];
+        let arrVat = [];
+        let arrGross = [];
+
+        let arrNetVat = [];
+        let arrGrossVat = [];
+        let arrPriceVat = [];
+
+        list.map((input, i) => {
+            arrNet.push(parseFloat(input[3], 10));
+            arrVat.push(parseFloat(input[6], 10));
+            arrGross.push(parseFloat(input[7], 10));
+
+            if(input.includes(vat)){
+                arrNetVat.push(parseFloat(input[3], 10));
+                arrPriceVat.push(parseFloat(input[6], 10));
+                arrGrossVat.push(parseFloat(input[7], 10));
+            }
+            return i;
+        });
+
+        let indexVat;
+
+        for(let i = listVat.length-1; i >= 0; i--){
+            if(arrFinishVat[i].includes(vat)){
+                indexVat = i;
+            }
+        }
+
+        if(arrNetVat.length > 0){
+            listVat[indexVat][0] = (arrNetVat.reduce((a, b) => a + b)).toFixed(2);
+            listVat[indexVat][2] = (arrPriceVat.reduce((a, b) => a + b)).toFixed(2);
+            listVat[indexVat][3] = (arrGrossVat.reduce((a, b) => a + b)).toFixed(2);
+        }
+        
         setState({ 
             ...state, 
             inputList: list,
             inputListRecountVat: listVat,
+            sumNet: (arrNet.reduce((a, b) => a + b)).toFixed(2),
+            sumVat: (arrVat.reduce((a, b) => a + b)).toFixed(2),
+            sumGross: (arrGross.reduce((a, b) => a + b)).toFixed(2),
         });
     };
 
@@ -88,7 +125,7 @@ const Post = () => {
         
     };
 
-    const handleNewResultVat = (e) => {
+    const handleNewResultVat = (e, newLineNet, newLineVat, newLineGross) => {
         let arrFinishVat = state.inputListRecountVat.map((line, i) => (
             line[1]
         ))
@@ -101,18 +138,47 @@ const Post = () => {
         for(let i = state.inputListRecountVat.length-1; i >= 0; i--){
             if(!arrVat.includes(arrFinishVat[i])) {   
                 list.splice(i, 1);             
-             }
+             } 
         }
+
+        let arrNet = [];
+        let arrPrVat = [];
+        let arrGross = [];
+
+        let test = [];
+
+        state.inputList.map((input, i) => {
+            arrNet.push(parseFloat(input[3], 10));
+            arrPrVat.push(parseFloat(input[6], 10));
+            arrGross.push(parseFloat(input[7], 10));
+
+            console.log(input)
+            test.push([input[3], input[5], input[6], input[6]])
+
+            return i;
+        });
+        console.log(test);
+
+        let netVat = (arrNet.reduce((a, b) => a + b)).toFixed(2);
+        let priceVat = (arrPrVat.reduce((a, b) => a + b)).toFixed(2);
+        let grossVat = (arrGross.reduce((a, b) => a + b)).toFixed(2);
+
 
         if(!arrFinishVat.includes(e.target.value)){
             setState({
                 ...state,
-                inputListRecountVat: [...list, ['0.00',e.target.value,'0.00','0.00']],        
+                inputListRecountVat: [...list, [newLineNet, e.target.value, newLineVat, newLineGross]],  
+                sumNet: netVat,
+                sumVat: priceVat,
+                sumGross: grossVat,      
             });
         } else {
             setState({ 
                 ...state, 
                 inputListRecountVat: list,
+                sumNet: netVat,
+                sumVat: priceVat,
+                sumGross: grossVat,   
             });  
         }
     };
@@ -164,30 +230,27 @@ const Post = () => {
         })
     };
 
-    const recountVat = (vat, net, priceVat, gross) => {
+    const recountVat = (vat) => {
         let arrNet = [];
         let arrVat = [];
         let arrGross = [];
 
-        arrNet.push(state.inputList.map((input, i) => {
-            let number = parseFloat(input[3], 10);
-            return number;
-        }));
+        let arrNetVat = [];
+        let arrGrossVat = [];
+        let arrPriceVat = [];
 
-        arrVat.push(state.inputList.map((input, i) => {
-            let number = parseFloat(input[6], 10);
-            return number;
-        }));
+        state.inputList.map((input, i) => {
+            arrNet.push(parseFloat(input[3], 10));
+            arrVat.push(parseFloat(input[6], 10));
+            arrGross.push(parseFloat(input[7], 10));
 
-        arrGross.push(state.inputList.map((input, i) => {
-            let number = parseFloat(input[7], 10);
-            return number;
-        }));
-
-
-        net = parseFloat(net);
-        priceVat = parseFloat(priceVat);
-        gross = parseFloat(gross);
+            if(input.includes(vat)){
+                arrNetVat.push(parseFloat(input[3], 10));
+                arrPriceVat.push(parseFloat(input[6], 10));
+                arrGrossVat.push(parseFloat(input[7], 10));
+            }
+            return i;
+        });
 
         let arrFinishVat = state.inputListRecountVat.map((line, i) => (
             line[1]
@@ -203,24 +266,16 @@ const Post = () => {
 
         const list = [...state.inputListRecountVat];
 
-        let oldNet = parseFloat(list[index][0]);
-        let oldPriceVat = parseFloat(list[index][2]);
-        let oldGross = parseFloat(list[index][3]);
-   
-        oldNet = oldNet + net;     
-        oldPriceVat =+priceVat;
-        oldGross =+gross;
-
-        list[index][0] = (oldNet).toFixed(2);
-        list[index][2] = (oldPriceVat).toFixed(2);
-        list[index][3] = (oldGross).toFixed(2);
+        list[index][0] = (arrNetVat.reduce((a, b) => a + b)).toFixed(2);
+        list[index][2] = (arrPriceVat.reduce((a, b) => a + b)).toFixed(2);
+        list[index][3] = (arrGrossVat.reduce((a, b) => a + b)).toFixed(2);
 
         setState({ 
             ...state, 
             inputListRecountVat: list,
-            sumNet: (arrNet[0].reduce((a, b) => a + b)).toFixed(2),
-            sumVat: (arrVat[0].reduce((a, b) => a + b)).toFixed(2),
-            sumGross: (arrGross[0].reduce((a, b) => a + b)).toFixed(2),
+            sumNet: (arrNet.reduce((a, b) => a + b)).toFixed(2),
+            sumVat: (arrVat.reduce((a, b) => a + b)).toFixed(2),
+            sumGross: (arrGross.reduce((a, b) => a + b)).toFixed(2),
         }); 
     }
 
@@ -422,7 +477,9 @@ const Post = () => {
                                             {state.inputList.length > 1 ? (
                                                 <TableCell className="deleteCell">
                                                     <IconButton
-                                                        onClick={() => handleRemoveClick(i)}
+                                                        onClick={() => {
+                                                            handleRemoveClick(i,input[5]);          
+                                                        }}
                                                         variant="contained"
                                                         className="deleteIcon"
                                                         >
@@ -494,13 +551,9 @@ const Post = () => {
                                                     }}
                                                     onBlur={(e) => {
                                                         const list = [...state.inputList];
-                                                        const vat = parseFloat(input[5],10)/100*e.target.value;
-                                                        const gross = parseFloat(e.target.value) + vat;
-                                                        const net = parseFloat(e.target.value,10)
                                                         list[i][3] = (parseFloat(e.target.value,10)).toFixed(2);
                                                         setState({ ...state, inputList: list });
-                                                        // recountSum();
-                                                        recountVat(input[5],(net).toFixed(2),(vat).toFixed(2), (gross).toFixed(2)); 
+                                                        recountVat(input[5]); 
                                                     }}
                                                     className="price"
                                                 />
@@ -533,8 +586,7 @@ const Post = () => {
                                                         list[i][6] = (vat).toFixed(2);
                                                         list[i][7] = (brutto).toFixed(2);
                                                         setState({ ...state, inputList: list });
-                                                        recountSum();
-                                                        handleNewResultVat(e);
+                                                        handleNewResultVat(e, input[4], input[6], input[7],);
                                                     }}
                                                     className="vat-rate"
                                                 >
@@ -566,7 +618,6 @@ const Post = () => {
                                                     size="small"
                                                     autoComplete="off"
                                                     margin="dense"
-                                                    // type="number"
                                                     onChange={(e) => {
                                                         handleInputChange(e, i, 7);
                                                         const list = [...state.inputList];
