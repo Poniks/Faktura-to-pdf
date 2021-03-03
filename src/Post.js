@@ -773,7 +773,26 @@ const Post = () => {
                             className="verbal"
                         />      
                     </div>
-                    <button onClick={handleSubmit}>Submit</button>
+                    <button 
+                        onClick = {handleSubmit}
+                        document = {state.document}
+                        numer = {state.numer}
+                        city = {state.city}
+                        dateSell = {state.dateSell}
+                        dateIssue = {state.dateIssue}
+                        inputList = {state.inputList}
+                        inputListRecountVat = {state.inputListRecountVat}
+                        sumNet = {state.sumNet}
+                        sumVat = {state.sumVat}
+                        sumGross = {state.sumGross}
+                        currency = {state.currency}
+                        payment = {state.payment}
+                        paymentDeadline = {state.paymentDeadline}
+                        accountNumber = {state.documaccountNumberent}
+                        verbalAmount = {state.verbalAmount}
+                    >
+                        Submit
+                    </button>
                 </div>)
                 :
                 (<PDF title={state.title} content={state.content} />)
