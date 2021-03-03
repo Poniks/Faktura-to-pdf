@@ -33,6 +33,11 @@ const Post = () => {
         sumNet: '0.00',
         sumVat: '0.00',
         sumGross: '0.00',
+        currency: 'PLN',
+        payment: 'Przelew',
+        paymentDeadline: '14 dni',
+        accountNumber: '',
+        verbalAmount: '',
     });
 
     const handleInputChange = (e, index, innerIndex) => {
@@ -125,7 +130,7 @@ const Post = () => {
         
     };
 
-    const handleNewResultVat = (e, newLineNet, newLineVat, newLineGross) => {
+    const handleNewResultVat = (e, newLineNet, newLineVat, newLineGross, oldPercent) => {
         let arrFinishVat = state.inputListRecountVat.map((line, i) => (
             line[1]
         ))
@@ -145,6 +150,10 @@ const Post = () => {
         let arrPrVat = [];
         let arrGross = [];
 
+        let arrNetVat = [];
+        let arrGrossVat = [];
+        let arrPriceVat = [];
+
         let test = [];
 
         state.inputList.map((input, i) => {
@@ -152,17 +161,46 @@ const Post = () => {
             arrPrVat.push(parseFloat(input[6], 10));
             arrGross.push(parseFloat(input[7], 10));
 
-            console.log(input)
-            test.push([input[3], input[5], input[6], input[6]])
+            test.push([input[3], input[5], input[6], input[7]])
+
+            if(input.includes(oldPercent)){
+                arrNetVat.push(parseFloat(input[3], 10));
+                arrPriceVat.push(parseFloat(input[6], 10));
+                arrGrossVat.push(parseFloat(input[7], 10));
+            }
 
             return i;
         });
-        console.log(test);
+
+        if(arrFinishVat.includes(e.target.value)){
+            list.forEach((input, i) => {
+                if(input[1].includes(e.target.value)){
+                    input[0] = (parseFloat(input[0], 10) + parseFloat(newLineNet)).toFixed(2);
+                    input[2] = (parseFloat(input[2], 10) + parseFloat(newLineVat)).toFixed(2);
+                    input[3] = (parseFloat(input[3], 10) + parseFloat(newLineGross)).toFixed(2);
+                }
+            })
+        }
 
         let netVat = (arrNet.reduce((a, b) => a + b)).toFixed(2);
         let priceVat = (arrPrVat.reduce((a, b) => a + b)).toFixed(2);
         let grossVat = (arrGross.reduce((a, b) => a + b)).toFixed(2);
 
+        let index;
+
+        state.inputList.forEach(input => {
+            if(input.includes(oldPercent)){
+                for(let i = list.length-1; i >= 0; i--){
+                    if(arrFinishVat[i].includes(oldPercent)){
+                        index = i;
+                    }
+                }
+    
+                list[index][0] = (arrNetVat.reduce((a, b) => a + b)).toFixed(2);
+                list[index][2] = (arrPriceVat.reduce((a, b) => a + b)).toFixed(2);
+                list[index][3] = (arrGrossVat.reduce((a, b) => a + b)).toFixed(2);
+            }
+        })
 
         if(!arrFinishVat.includes(e.target.value)){
             setState({
@@ -288,6 +326,15 @@ const Post = () => {
         },
     ];
 
+    const payments = [
+        {
+          value: 'Przelew',
+        },
+        {
+          value: 'xyz',
+        },
+    ];
+
     const unit = [
         {
             value: 'usł.',
@@ -383,30 +430,29 @@ const Post = () => {
                         />
                     </div>
                     <div className="nwm2">
-                        <div className="items">
+                        <div className="items left">
                             <div className="item">
+                                <TextField
+                                    id="outlined-size-normal"
+                                    variant="outlined"
+                                /> 
                                 <p>Sprzedawca</p>
+                            </div>
+                            <div className="item">
                                 <TextField
                                     id="outlined-size-normal"
                                     variant="outlined"
                                 /> 
-                            </div>
-                            <div className="item">
                                 <p>NIP</p>
+                            </div>
+                            <div className="item">
                                 <TextField
                                     id="outlined-size-normal"
                                     variant="outlined"
                                 /> 
-                            </div>
-                            <div className="item">
                                 <p>Ulica</p>
-                                <TextField
-                                    id="outlined-size-normal"
-                                    variant="outlined"
-                                /> 
                             </div>
-                            <div className="item">
-                                <p>Miasto / kod</p>
+                            <div className="item">                  
                                 <TextField
                                     id="outlined-size-normal"
                                     variant="outlined"
@@ -416,10 +462,11 @@ const Post = () => {
                                     id="outlined-size-normal"
                                     variant="outlined"
                                     className="test1"
-                                />      
+                                />  
+                                <p>Miasto / kod</p>    
                             </div>       
                         </div> 
-                        <div className="items">
+                        <div className="items right">
                             <div className="item">
                                 <p>Nabywca</p>
                                 <TextField
@@ -579,6 +626,7 @@ const Post = () => {
                                                     variant="outlined"
                                                     size="small"
                                                     onChange={(e) => {
+                                                        const oldPercent = input[5];
                                                         handleInputChange(e, i, 5);
                                                         const list = [...state.inputList];
                                                         const vat = parseFloat(input[5],10)/100*input[3];
@@ -586,7 +634,7 @@ const Post = () => {
                                                         list[i][6] = (vat).toFixed(2);
                                                         list[i][7] = (brutto).toFixed(2);
                                                         setState({ ...state, inputList: list });
-                                                        handleNewResultVat(e, input[4], input[6], input[7],);
+                                                        handleNewResultVat(e, input[4], input[6], input[7], oldPercent);
                                                     }}
                                                     className="vat-rate"
                                                 >
@@ -649,7 +697,7 @@ const Post = () => {
                                                 <AddIcon />
                                             </IconButton>
                                         </Button>
-                                        <TableCell rowSpan={1 + state.inputListRecountVat.length} colspan={3}/> 
+                                        <TableCell rowSpan={3 + state.inputListRecountVat.length} colspan={3}/> 
                                         <TableCell>Razem</TableCell>
                                         <TableCell>{state.sumNet}</TableCell>
                                         <TableCell></TableCell>
@@ -658,7 +706,7 @@ const Post = () => {
                                     </TableRow>
                                     {state.inputListRecountVat.map((input,i) => (
                                         <TableRow row key={i}>
-                                            <TableCell></TableCell>
+                                            <TableCell className="clearCell"></TableCell>
                                             <TableCell>W tym</TableCell>
                                             <TableCell>{input[0]}</TableCell>
                                             <TableCell>{input[1]}</TableCell>
@@ -666,11 +714,66 @@ const Post = () => {
                                             <TableCell>{input[3]}</TableCell>
                                         </TableRow>
                                     ))}
-                                    
+                                    <TableRow>
+                                        <TableCell className="clearCell"></TableCell>
+                                        <TableCell>Do zapłaty</TableCell>
+                                        <TableCell>{state.sumGross}</TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell className="clearCell"></TableCell>
+                                        <TableCell>Waluta</TableCell>
+                                        <TableCell>{state.currency}</TableCell>
+                                    </TableRow>
                                 </TableBody>
                             </Table>
                         </TableContainer>
                     </div>
+                    <div className="nwm4">
+                        <TextField
+                            id="outlined-select-currency"
+                            select
+                            label="Sposób płatności"
+                            value={state.payment}
+                            onChange={handleChange('payment')}
+                            variant="outlined"
+                            size="medium"
+                            className="payment"
+                        >
+                            {payments.map((option) => (
+                                <MenuItem key={option.value} value={option.value}>
+                                {option.value}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                        <TextField
+                            id="outlined-multiline-flexible"
+                            label="Termin płatności"
+                            rowsMax={4}
+                            value={state.paymentDeadline}
+                            onChange={handleChange('paymentDeadline')}
+                            variant="outlined"
+                            className="deadline"
+                        />
+                        <TextField
+                            id="outlined-multiline-flexible"
+                            label="Numer konta"
+                            rowsMax={4}
+                            value={state.accountNumber}
+                            onChange={handleChange('accountNumber')}
+                            variant="outlined"
+                            className="numberAcc"
+                        />
+                        <TextField
+                            id="outlined-multiline-flexible"
+                            label="Słowna kwota"
+                            rowsMax={4}
+                            value={state.varbalAmount}
+                            onChange={handleChange('varbalAmount')}
+                            variant="outlined"
+                            className="verbal"
+                        />      
+                    </div>
+                    <button onClick={handleSubmit}>Submit</button>
                 </div>)
                 :
                 (<PDF title={state.title} content={state.content} />)

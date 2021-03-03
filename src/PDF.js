@@ -6,9 +6,10 @@ const ref = React.createRef();
 const PDF = (props) => {
     return(
         <>
-            <div className="Post" ref={ref}>  
-                <h1>{props.title}</h1>
-                <p>{props.content}</p>
+            <div className="Post" ref={ref}>
+                <div className="title">
+                    
+                </div>  
             </div>
             <Pdf targetRef={ref} filename="testowanko.pdf">
                 {({ toPdf }) => <button onClick={toPdf}>Capture as PDF</button>}
