@@ -26,6 +26,16 @@ const Post = () => {
         document: 'Faktura',
         numer: '01/02/2021',
         city: '',
+        seller: '',
+        sellerNIP: '',
+        sellerStreet: '',
+        sellerCity: '',
+        sellerZIP: '',
+        buyer: '',
+        buyerNIP: '',
+        buyerStreet: '',
+        buyerCity: '',
+        buyerZIP: '',
         dateSell: `${year}-${newMonth}-${newDay}`,
         dateIssue: `${year}-${newMonth}-${newDay}`,
         inputList: [['', 'usł.', '1', '0.00', '0.00', '23%', '0.00', '0.00']],
@@ -435,6 +445,8 @@ const Post = () => {
                                 <TextField
                                     id="outlined-size-normal"
                                     variant="outlined"
+                                    value={state.seller}
+                                    onChange={handleChange('seller')}
                                 /> 
                                 <p>Sprzedawca</p>
                             </div>
@@ -442,6 +454,8 @@ const Post = () => {
                                 <TextField
                                     id="outlined-size-normal"
                                     variant="outlined"
+                                    value={state.sellerNIP}
+                                    onChange={handleChange('sellerNIP')}
                                 /> 
                                 <p>NIP</p>
                             </div>
@@ -449,6 +463,8 @@ const Post = () => {
                                 <TextField
                                     id="outlined-size-normal"
                                     variant="outlined"
+                                    value={state.sellerStreet}
+                                    onChange={handleChange('sellerStreet')}
                                 /> 
                                 <p>Ulica</p>
                             </div>
@@ -457,11 +473,15 @@ const Post = () => {
                                     id="outlined-size-normal"
                                     variant="outlined"
                                     className="test2"
+                                    value={state.sellerCity}
+                                    onChange={handleChange('sellerCity')}
                                 />
                                 <TextField
                                     id="outlined-size-normal"
                                     variant="outlined"
                                     className="test1"
+                                    value={state.sellerZIP}
+                                    onChange={handleChange('sellerZIP')}
                                 />  
                                 <p>Miasto / kod</p>    
                             </div>       
@@ -472,6 +492,8 @@ const Post = () => {
                                 <TextField
                                     id="outlined-size-normal"
                                     variant="outlined"
+                                    value={state.buyer}
+                                    onChange={handleChange('buyer')}
                                 /> 
                             </div>
                             <div className="item">
@@ -479,6 +501,8 @@ const Post = () => {
                                 <TextField
                                     id="outlined-size-normal"
                                     variant="outlined"
+                                    value={state.buyerNIP}
+                                    onChange={handleChange('buyerNIP')}
                                 /> 
                             </div>
                             <div className="item">
@@ -486,6 +510,8 @@ const Post = () => {
                                 <TextField
                                     id="outlined-size-normal"
                                     variant="outlined"
+                                    value={state.buyerStreet}
+                                    onChange={handleChange('buyerStreet')}
                                 /> 
                             </div>
                             <div className="item">
@@ -494,11 +520,15 @@ const Post = () => {
                                     id="outlined-size-normal"
                                     variant="outlined"
                                     className="test2"
+                                    value={state.buyerCity}
+                                    onChange={handleChange('buyerCity')}
                                 />
                                 <TextField
                                     id="outlined-size-normal"
                                     variant="outlined"
                                     className="test1"
+                                    value={state.buyerZIP}
+                                    onChange={handleChange('buyerZIP')}
                                 />      
                             </div>     
                         </div>                         
@@ -773,29 +803,40 @@ const Post = () => {
                             className="verbal"
                         />      
                     </div>
-                    <button 
-                        onClick = {handleSubmit}
-                        document = {state.document}
-                        numer = {state.numer}
-                        city = {state.city}
-                        dateSell = {state.dateSell}
-                        dateIssue = {state.dateIssue}
-                        inputList = {state.inputList}
-                        inputListRecountVat = {state.inputListRecountVat}
-                        sumNet = {state.sumNet}
-                        sumVat = {state.sumVat}
-                        sumGross = {state.sumGross}
-                        currency = {state.currency}
-                        payment = {state.payment}
-                        paymentDeadline = {state.paymentDeadline}
-                        accountNumber = {state.documaccountNumberent}
-                        verbalAmount = {state.verbalAmount}
-                    >
+                    <button onClick = {handleSubmit}>
                         Submit
                     </button>
                 </div>)
                 :
-                (<PDF title={state.title} content={state.content} />)
+                (<PDF 
+                    title={state.title} 
+                    content={state.content} 
+                    document = {state.document}
+                    numer = {state.numer}
+                    city = {state.city}
+                    dateSell = {state.dateSell}
+                    dateIssue = {state.dateIssue}
+                    seller = {state.seller}
+                    sellerNIP = {state.sellerNIP}
+                    sellerStreet = {state.sellerStreet}
+                    sellerCity = {state.sellerCity}
+                    sellerZIP = {state.sellerZIP}
+                    buyer = {state.buyer}
+                    buyerNIP = {state.buyerNIP}
+                    buyerStreet = {state.buyerStreet}
+                    buyerCity = {state.buyerCity}
+                    buyerZIP = {state.buyerZIP}
+                    inputList = {state.inputList}
+                    inputListRecountVat = {state.inputListRecountVat}
+                    sumNet = {state.sumNet}
+                    sumVat = {state.sumVat}
+                    sumGross = {state.sumGross}
+                    currency = {state.currency}
+                    payment = {state.payment}
+                    paymentDeadline = {state.paymentDeadline}
+                    accountNumber = {state.documaccountNumberent}
+                    verbalAmount = {state.verbalAmount}
+                />)
             }
         </>
     )
