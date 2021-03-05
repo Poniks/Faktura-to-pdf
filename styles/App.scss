@@ -163,7 +163,7 @@ body {
       height: 50px;
       border-top: 2px solid black;
       border-bottom: 2px solid black;
-      background-color: #ccc;
+      background-color: #ddd;
       margin: 20px 0;
       padding: 0 5px;
       display: flex;
@@ -196,6 +196,32 @@ body {
         }
       }
     }
+
+    .table {
+      margin-top: 60px;
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+
+        thead {
+          background-color: #ddd;
+          font-size: 10px;
+        }
+
+        tbody {
+          font-size: 13px;
+        }
+  
+        td {
+          border: 1px solid black;
+          padding: 5px 10px;
+
+          .clr {
+            background-color: red;
+          }
+        }
+      }
+    }
   }
 }
-
